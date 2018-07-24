@@ -1,0 +1,11 @@
+defmodule Wc2018Graphql.Repo do
+  use Ecto.Repo, otp_app: :wc2018_graphql
+
+  @doc """
+  Dynamically loads the repository url from the
+  DATABASE_URL environment variable.
+  """
+  def init(_, opts) do
+    {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
+  end
+end
