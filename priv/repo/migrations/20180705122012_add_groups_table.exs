@@ -3,7 +3,7 @@ defmodule Wc2018Graphql.Repo.Migrations.AddGroupsTable do
 
   def change do
     create table("groups",
-      comment: "Team start the tournament inside groups of four."
+      comment: "The groups of four, teams are challenged to advance from."
     ) do
       add :letter, :string, size: 1,
         comment: "Single letter group name."

@@ -2,7 +2,7 @@ defmodule Wc2018Graphql.Repo.Migrations.AddMatchesTable do
   use Ecto.Migration
 
   def change do
-    create table("matches", comment: "All matches played.") do
+    create table("matches", comment: "Played matches.") do
       add :result,    :string, size: 5
       add :playtime,  :naive_datetime
 
