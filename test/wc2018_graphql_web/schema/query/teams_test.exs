@@ -1,14 +1,17 @@
 defmodule Wc2018GraphqlWeb.Schema.Query.TeamsTest do
   use Wc2018GraphqlWeb.ConnCase, async: true
+
   setup do
+    Code.compiler_options(ignore_module_conflict: true)
     Code.load_file("priv/repo/seeds.exs")
   end
 
-  @query "{ teams { fifa_code group name } }"
-  
-    test "query all fields for teams returns correct data" do
-      conn = build_conn()
-      conn = get conn, "/api", query: @query
+  describe "query teams" do
+    test "fields returns correct data" do
+
+      query = "{ teams { fifa_code group name } }"
+      conn  = build_conn()
+      conn  = get conn, "/api", query: query
 
       assert json_response(conn, 200) ==
         %{
@@ -49,4 +52,27 @@ defmodule Wc2018GraphqlWeb.Schema.Query.TeamsTest do
           }
         }
     end
+
+    test "fields returns correct data for specific team" do
+      query = """
+      {
+        teams(name: "Russia") {
+          fifa_code
+          group
+          name
+        }
+      }
+      """
+      conn  = build_conn()
+      conn  = get conn, "/api", query: query
+
+      assert json_response(conn, 200) == %{
+        "data" => %{
+          "teams" => [
+              %{"fifa_code" => "RUS", "group" => "A", "name" => "Russia"} ]
+        }
+      }
+
+    end
+  end
 end
