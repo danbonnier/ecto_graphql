@@ -5,7 +5,16 @@ defmodule Wc2018GraphqlWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", Wc2018GraphqlWeb do
+  scope "/" do
     pipe_through :api
+
+  forward "/api", Absinthe.Plug,
+    schema: Wc2018GraphqlWeb.Schema
+
+  forward "/graphiql", Absinthe.Plug.GraphiQL,
+    schema: Wc2018GraphqlWeb.Schema,
+    interface: :advanced
+    #interface: :simple
+    #interface: :playground # vim-mode ftw!
   end
 end
