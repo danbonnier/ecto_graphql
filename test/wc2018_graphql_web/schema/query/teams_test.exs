@@ -74,5 +74,13 @@ defmodule Wc2018GraphqlWeb.Schema.Query.TeamsTest do
       }
 
     end
+
+    test "returns error for invalid input" do
+      query = "{ teams(name: 123) { name } }"
+      response = get(build_conn(), "/api", query: query)
+
+      assert %{"errors" => [ %{"message" => message} ]} = json_response(response, 400)
+      assert message == "Argument \"name\" has invalid value 123."
+    end
   end
 end
