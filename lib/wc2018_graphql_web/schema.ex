@@ -1,7 +1,6 @@
 defmodule Wc2018GraphqlWeb.Schema do
   use Absinthe.Schema
-  import Ecto.Query
-  alias Wc2018Graphql.{Repo,Team}
+  alias Wc2018GraphqlWeb.Resolvers
 
   # the entry point for this schema
   # Absinthe.Schema.lookup_type(Wc2018GraphqlWeb.Schema, "RootQueryType")
@@ -12,22 +11,7 @@ defmodule Wc2018GraphqlWeb.Schema do
 
     field :teams, list_of(:team) do
       arg :name, :string
-        resolve fn
-          _, %{name: name}, _ when is_binary(name) ->
-            teams = Repo.all from t in Team,
-              join: g in assoc(t, :group),
-              where: ilike(t.name, ^"%#{name}%"),
-              select: %Team{fifa_code: t.fifa_code, name: t.name, group: g.letter}
-
-            {:ok, teams}
-
-          _,_,_ ->
-            teams = Repo.all from t in Team,
-              join: g in assoc(t, :group),
-              select: %Team{fifa_code: t.fifa_code, name: t.name, group: g.letter}
-
-            {:ok, teams}
-      end
+      resolve &Resolvers.Team.team/3
     end
   end
 
@@ -39,5 +23,4 @@ defmodule Wc2018GraphqlWeb.Schema do
     field :name,      :string
     field :group,     :string
   end
-
 end
