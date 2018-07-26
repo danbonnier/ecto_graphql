@@ -9,18 +9,26 @@ defmodule Wc2018GraphqlWeb.Schema do
 
   query do
     @desc "Contending teams." 
-    field :teams, list_of(:team) do
-      resolve fn _,_,_ ->
-				teams = Repo.all from t in Team,
-					join: g in assoc(t, :group),
-					select: %Team{fifa_code: t.fifa_code, name: t.name, group: g.letter}
 
-				{:ok, teams}
-        #{:ok, [%Team{name: "foo", fifa_code: "FOO", group: "F"}] }
+    field :teams, list_of(:team) do
+      arg :name, :string
+        resolve fn
+          _, %{name: name}, _ when is_binary(name) ->
+            teams = Repo.all from t in Team,
+              join: g in assoc(t, :group),
+              where: ilike(t.name, ^"%#{name}%"),
+              select: %Team{fifa_code: t.fifa_code, name: t.name, group: g.letter}
+
+            {:ok, teams}
+
+          _,_,_ ->
+            teams = Repo.all from t in Team,
+              join: g in assoc(t, :group),
+              select: %Team{fifa_code: t.fifa_code, name: t.name, group: g.letter}
+
+            {:ok, teams}
       end
     end
-
-
   end
 
   # A new object type (several fields)
