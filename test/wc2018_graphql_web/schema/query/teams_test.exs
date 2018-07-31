@@ -7,7 +7,7 @@ defmodule Wc2018GraphqlWeb.Schema.Query.TeamsTest do
   end
 
   describe "query teams" do
-    test "fields returns correct data" do
+    test "return correct field data" do
 
       query = "{ teams { fifa_code group name } }"
       conn  = build_conn()
@@ -53,7 +53,7 @@ defmodule Wc2018GraphqlWeb.Schema.Query.TeamsTest do
         }
     end
 
-    test "fields returns correct data for specific team" do
+    test "returns correct field data for specific team" do
       query = """
       {
         teams(name: "Russia") {
@@ -75,7 +75,7 @@ defmodule Wc2018GraphqlWeb.Schema.Query.TeamsTest do
 
     end
 
-    test "returns error for invalid input" do
+    test "return error for invalid input" do
       query = "{ teams(name: 123) { name } }"
       response = get(build_conn(), "/api", query: query)
 
