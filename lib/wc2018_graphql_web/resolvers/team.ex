@@ -1,6 +1,6 @@
 defmodule Wc2018GraphqlWeb.Resolvers.Team do
   import Ecto.Query
-  alias Wc2018Graphql.{Repo,Team}
+  alias Wc2018Graphql.{Repo, Team, Player}
 
   def team(_, %{name: name}, _) when is_binary(name) do
     teams = Repo.all from t in Team,
@@ -18,4 +18,16 @@ defmodule Wc2018GraphqlWeb.Resolvers.Team do
 
     {:ok, teams}
   end
+
+  def players(_, %{team: team}, _) when is_binary(team) do
+    team = String.capitalize(team)
+    players = Repo.all from p in Player,
+      join: t in assoc(p, :team),
+      where: p.team_id == t.id and t.name == ^team,
+      select: %{name: p.name}
+
+    {:ok, players}
+  end
+
+  def players(_,_, _),  do: {:error, "No team provided"}
 end

@@ -15,6 +15,6 @@ defmodule Wc2018GraphqlWeb.Router do
     schema: Wc2018GraphqlWeb.Schema,
     interface: :advanced
     #interface: :simple
-    #interface: :playground # vim-mode ftw!
+    #interface: :playground
   end
 end
